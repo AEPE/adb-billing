@@ -22,7 +22,6 @@ spark.conf.set(
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC 
 # MAGIC DROP TABLE if exists importnextstar.accountproduct;
 # MAGIC CREATE TABLE importnextstar.accountproduct 
 # MAGIC USING parquet
@@ -32,6 +31,86 @@ spark.conf.set(
 # MAGIC CREATE TABLE importnextstar.basetype 
 # MAGIC USING parquet
 # MAGIC LOCATION "wasbs://nextstar@stgbillingpoc.blob.core.windows.net/parquet-nextstar-raw/basetype";
+# MAGIC 
+# MAGIC DROP TABLE if exists importnextstar.deliveryserviceclasscategory;
+# MAGIC CREATE TABLE importnextstar.deliveryserviceclasscategory 
+# MAGIC USING parquet
+# MAGIC LOCATION "wasbs://nextstar@stgbillingpoc.blob.core.windows.net/parquet-nextstar-raw/deliveryserviceclasscategory";
+# MAGIC 
+# MAGIC DROP TABLE if exists importnextstar.energymonthlyservicepoint;
+# MAGIC CREATE TABLE importnextstar.energymonthlyservicepoint 
+# MAGIC USING parquet
+# MAGIC LOCATION "wasbs://nextstar@stgbillingpoc.blob.core.windows.net/parquet-nextstar-raw/energymonthlyservicepoint";
+# MAGIC 
+# MAGIC DROP TABLE if exists importnextstar.deliverycharge;
+# MAGIC CREATE TABLE importnextstar.deliverycharge 
+# MAGIC USING parquet
+# MAGIC LOCATION "wasbs://nextstar@stgbillingpoc.blob.core.windows.net/parquet-nextstar-raw/deliverycharge";
+# MAGIC 
+# MAGIC DROP TABLE if exists importnextstar.deliverychargecodedescription;
+# MAGIC CREATE TABLE importnextstar.deliverychargecodedescription 
+# MAGIC USING parquet
+# MAGIC LOCATION "wasbs://nextstar@stgbillingpoc.blob.core.windows.net/parquet-nextstar-raw/deliverychargecodedescription";
+# MAGIC 
+# MAGIC DROP TABLE if exists importnextstar.deliverychargedetail;
+# MAGIC CREATE TABLE importnextstar.deliverychargedetail 
+# MAGIC USING parquet
+# MAGIC LOCATION "wasbs://nextstar@stgbillingpoc.blob.core.windows.net/parquet-nextstar-raw/deliverychargedetail";
+# MAGIC 
+# MAGIC DROP TABLE if exists importnextstar.deliverychargeincludedetail;
+# MAGIC CREATE TABLE importnextstar.deliverychargeincludedetail 
+# MAGIC USING parquet
+# MAGIC LOCATION "wasbs://nextstar@stgbillingpoc.blob.core.windows.net/parquet-nextstar-raw/deliverychargeincludedetail";
+
+# COMMAND ----------
+
+deliveryserviceclasscategory_pandas_df = ps.DataFrame(sqlContext.sql("select * from importnextstar.deliveryserviceclasscategory"))
+deliveryserviceclasscategory_pandas_df_unique = ps.DataFrame(deliveryserviceclasscategory_pandas_df.nunique())
+deliveryserviceclasscategory_pandas_df_na = ps.DataFrame(deliveryserviceclasscategory_pandas_df.isna().sum())
+deliveryserviceclasscategory_pandas_df_unique.reset_index(inplace=True)
+deliveryserviceclasscategory_pandas_df_na.reset_index(inplace=True)
+deliveryserviceclasscategory_results = deliveryserviceclasscategory_pandas_df_unique.merge(deliveryserviceclasscategory_pandas_df_na, on='index')
+deliveryserviceclasscategory_results.rename({'index': 'Colname', 'None_x': 'Uniquevals', 'None_y': 'Nullvals'}, axis=1, inplace=True)
+
+energymonthlyservicepoint_pandas_df = ps.DataFrame(sqlContext.sql("select * from importnextstar.energymonthlyservicepoint"))
+energymonthlyservicepoint_pandas_df_unique = ps.DataFrame(energymonthlyservicepoint_pandas_df.nunique())
+energymonthlyservicepoint_pandas_df_na = ps.DataFrame(energymonthlyservicepoint_pandas_df.isna().sum())
+energymonthlyservicepoint_pandas_df_unique.reset_index(inplace=True)
+energymonthlyservicepoint_pandas_df_na.reset_index(inplace=True)
+energymonthlyservicepoint_results = energymonthlyservicepoint_pandas_df_unique.merge(energymonthlyservicepoint_pandas_df_na, on='index')
+energymonthlyservicepoint_results.rename({'index': 'Colname', 'None_x': 'Uniquevals', 'None_y': 'Nullvals'}, axis=1, inplace=True)
+
+deliverycharge_pandas_df = ps.DataFrame(sqlContext.sql("select * from importnextstar.deliverycharge"))
+deliverycharge_pandas_df_unique = ps.DataFrame(deliverycharge_pandas_df.nunique())
+deliverycharge_pandas_df_na = ps.DataFrame(deliverycharge_pandas_df.isna().sum())
+deliverycharge_pandas_df_unique.reset_index(inplace=True)
+deliverycharge_pandas_df_na.reset_index(inplace=True)
+deliverycharge_results = deliverycharge_pandas_df_unique.merge(deliverycharge_pandas_df_na, on='index')
+deliverycharge_results.rename({'index': 'Colname', 'None_x': 'Uniquevals', 'None_y': 'Nullvals'}, axis=1, inplace=True)
+
+deliverychargecodedescription_pandas_df = ps.DataFrame(sqlContext.sql("select * from importnextstar.deliverychargecodedescription"))
+deliverychargecodedescription_pandas_df_unique = ps.DataFrame(deliverychargecodedescription_pandas_df.nunique())
+deliverychargecodedescription_pandas_df_na = ps.DataFrame(deliverychargecodedescription_pandas_df.isna().sum())
+deliverychargecodedescription_pandas_df_unique.reset_index(inplace=True)
+deliverychargecodedescription_pandas_df_na.reset_index(inplace=True)
+deliverychargecodedescription_results = deliverychargecodedescription_pandas_df_unique.merge(deliverychargecodedescription_pandas_df_na, on='index')
+deliverychargecodedescription_results.rename({'index': 'Colname', 'None_x': 'Uniquevals', 'None_y': 'Nullvals'}, axis=1, inplace=True)
+
+deliverychargedetail_pandas_df = ps.DataFrame(sqlContext.sql("select * from importnextstar.deliverychargedetail"))
+deliverychargedetail_pandas_df_unique = ps.DataFrame(deliverychargedetail_pandas_df.nunique())
+deliverychargedetail_pandas_df_na = ps.DataFrame(deliverychargedetail_pandas_df.isna().sum())
+deliverychargedetail_pandas_df_unique.reset_index(inplace=True)
+deliverychargedetail_pandas_df_na.reset_index(inplace=True)
+deliverychargedetail_results = deliverychargedetail_pandas_df_unique.merge(deliverychargedetail_pandas_df_na, on='index')
+deliverychargedetail_results.rename({'index': 'Colname', 'None_x': 'Uniquevals', 'None_y': 'Nullvals'}, axis=1, inplace=True)
+
+deliverychargeincludedetail_pandas_df = ps.DataFrame(sqlContext.sql("select * from importnextstar.deliverychargeincludedetail"))
+deliverychargeincludedetail_pandas_df_unique = ps.DataFrame(deliverychargeincludedetail_pandas_df.nunique())
+deliverychargeincludedetail_pandas_df_na = ps.DataFrame(deliverychargeincludedetail_pandas_df.isna().sum())
+deliverychargeincludedetail_pandas_df_unique.reset_index(inplace=True)
+deliverychargeincludedetail_pandas_df_na.reset_index(inplace=True)
+deliverychargeincludedetail_results = deliverychargeincludedetail_pandas_df_unique.merge(deliverychargeincludedetail_pandas_df_na, on='index')
+deliverychargeincludedetail_results.rename({'index': 'Colname', 'None_x': 'Uniquevals', 'None_y': 'Nullvals'}, axis=1, inplace=True)
 
 # COMMAND ----------
 
@@ -43,31 +122,24 @@ basetype_pandas_df_na.reset_index(inplace=True)
 basetype_results = basetype_pandas_df_unique.merge(basetype_pandas_df_na, on='index')
 basetype_results.rename({'index': 'Colname', 'None_x': 'Uniquevals', 'None_y': 'Nullvals'}, axis=1, inplace=True)
 
+# COMMAND ---------
 
-accountproduct = sqlContext.sql("select * from importnextstar.accountproduct")
-accountproduct_pandas_df = ps.DataFrame(accountproduct)
-accountproduct_pandas_df_unique = ps.DataFrame(accountproduct_pandas_df.nunique())
-accountproduct_pandas_df_na = ps.DataFrame(accountproduct_pandas_df.isna().sum())
-accountproduct_pandas_df_unique.reset_index(inplace=True)
-accountproduct_pandas_df_na.reset_index(inplace=True)
-accountproduct_results = accountproduct_pandas_df_unique.merge(accountproduct_pandas_df_na, on='index')
-accountproduct_results.rename({'index': 'Colname', 'None_x': 'Uniquevals', 'None_y': 'Nullvals'}, axis=1, inplace=True)
+energymonthlyservicepoint_results = energymonthlyservicepoint_results.to_spark()
+energymonthlyservicepoint_results = energymonthlyservicepoint_results.withColumn("table",lit("energymonthlyservicepoint"))
 
-# COMMAND ----------
+deliverycharge_results = deliverycharge_results.to_spark()
+deliverycharge_results = deliverycharge_results.withColumn("table",lit("deliverycharge"))
 
-#File destination location
-Path = "wasbs://nextstar@stgbillingpoc.blob.core.windows.net/accountproduct_results_randall.csv"
+deliverychargecodedescription_results = deliverychargecodedescription_results.to_spark()
+deliverychargecodedescription_results = deliverychargecodedescription_results.withColumn("table",lit("deliverychargecodedescription"))
 
-#convert pandas df to pyspark
-accountproduct_results = accountproduct_results.to_spark()
-basetype_results = basetype_results.to_spark()
+deliverychargedetail_results = deliverychargedetail_results.to_spark()
+deliverychargedetail_results = deliverychargedetail_results.withColumn("table",lit("deliverychargedetail"))
 
-#include the column with the table name
-accountproduct_results = accountproduct_results.withColumn("table",lit("accountproduct"))
-basetype_results = basetype_results.withColumn("table",lit("basetype"))
+deliverychargeincludedetail_results = deliverychargeincludedetail_results.to_spark()
+deliverychargeincludedetail_results = deliverychargeincludedetail_results.withColumn("table",lit("deliverychargeincludedetail"))
 
-#consolidate datasets in one single object
-Report = accountproduct_results.union(basetype_results)
+Path = "wasbs://nextstar@stgbillingpoc.blob.core.windows.net/report_plopez.csv"
 
-#write to the csv file and display the report
+Report = deliveryserviceclasscategory_results.union(energymonthlyservicepoint_results).union(deliverycharge_results).union(deliverychargecodedescription_results).union(deliverychargedetail_results).union(deliverychargeincludedetail_results)
 Report.repartition(1).write.format("csv").mode("overwrite").option("header", "true").save(Path)
